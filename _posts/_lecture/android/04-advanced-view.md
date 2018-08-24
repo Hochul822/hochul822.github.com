@@ -37,7 +37,7 @@
 ### 리스트뷰 만들기
 
 ###### 1. 레이아웃 설정
-리스트뷰를 레이아웃에 더해주자.
+리스트뷰를 레이아웃에 더해줄께요.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -61,9 +61,9 @@
 ```
 
 ###### 2. 아이템 만들기
-Memo.java 클래스를 만들자.
+Memo.java 클래스를 만들께요.
 
-리스트뷰의 한칸 한칸에 쓰일 데이터이다.
+리스트뷰의 한칸 한칸에 쓰일 데이터에요.
 ```java
 public class Memo {
     int no;
@@ -91,10 +91,10 @@ public class Memo {
 ```
 
 ###### 3. 액티비티에 리스트뷰 추가하기
-액티비티에 리스트뷰를 추가해주자.
-밑의 코드를 따라하면은 에러가 날 거다.
+액티비티에 리스트뷰를 추가해줄께요.
+밑의 코드를 따라하면은 에러가 날 거에요.
 
-아직 어댑터가 없기 때문이다.
+아직 어댑터가 없기 때문이에요.
 
 ```java
 public class MainActivity extends AppCompatActivity {
@@ -113,10 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
 ###### 4. 어댑터 만들기
 MemoListAdapter란 클래스를 만들고
-BaseAdapter를 상속해주자.
+BaseAdapter를 상속해줄께요.
 
 BaseAdapter는 기본적으로 많이 쓰는 것들을 담은 어댑터인데
-커스텀할 수도 있다.
+커스텀할 수도 있어요.
 
 ```java
 public class MemoListAdapter extends BaseAdapter {
@@ -164,6 +164,8 @@ public class MemoListAdapter extends BaseAdapter {
 ```
 
 ###### 5. 어댑터 리스트뷰에 추가해주기
+onCreate 내부에서 ArrayList를 만들고 필요한 데이터를 더해주도록 할께요.
+
 ```java
 public class MainActivity extends AppCompatActivity {
 
@@ -190,3 +192,9 @@ public class MainActivity extends AppCompatActivity {
 ```
 
 ###### 6. 실행
+무리없이 실행되면은 성공이에요!
+
+
+###### 질문
+- 나중에 데이터를 추가하면 어떻게 리스트뷰를 업데이트할까요?
+- 데이터를 어디서 추가해주는 게 좋을까요? onCreate에서 추가하는 게 과연 좋을까요?
