@@ -106,3 +106,34 @@ delete from employee where id = 1;
 ```sql
 drop table employee;
 ```
+
+### 안드로이드와의 연동
+
+### Query
+INSERT, UPDATE, CREATE는 실행시 **execSQL()** 란 함수를 쓴다.
+
+```java
+SQLiteDatabase db;
+String sql = "create table store (id integer primary key not null)";
+db.execSQL()
+```
+
+반면 SELECT의 경우 **rawQuery()** 란 함수를 사용한다.
+
+```java
+public void showData() {
+    String sql = "select * from " + tableName;
+    Cursor cursor = db.rawQuery(sql, null);
+
+    while (cursor.moveToNext()) {
+      // 첫 번째 컬럼(Column)이 INTEGER 타입인 경우.
+      int val = cursor.getInt(0) ;
+
+      // 두 번째 컬럼(Column)의 타입이 TEXT 인 경우.
+      String str = cursor.getString(1) ;
+
+      // 세 번째 컬럼(Column)이 REAL 타입으로 선언된 경우.
+      float real = cursor.getFloat(2) ;
+    }
+}
+```   
