@@ -11,6 +11,63 @@
   - gson 추가하기
   - 데이터 요청해보기
 
+
+##### URL (Uniform Resource Locator)이란?
+택배를 보내려면 주소를 알아야하죠?
+
+어디로 갈지를 나타내는 게 URL이에요.
+
+**http://www.naver.com** 처럼 생겼습니다.
+
+URL을 브라우저에 입력하면 사이트로 이동을 하는데, 브라우저가 URL을 보고 어디로 갈 지 알고 이동을 합니다.
+
+URL은 웹사이트 구분할때뿐만 아니라, 메일이나 파일 주고 받기에도 활용이되요.
+
+
+URL은 다음과 같은 구성으로 됩니다.
+
+프로토콜 : http://
+도메인 : www.korea.kr
+
+URL 앞에 있는 프로토콜로 어떤 작업을 해야할지를 구분을 하죠.
+http는 인터넷 통신을 나타내는 프로토콜이고 다른 프로토콜도 있습니다.
+
+이메일 : mailto:somebody@mail.somehost.com
+ftp :  ftp://id:pass@192.168.1.234/a.gif
+
+###### IP 주소란?
+URL은 http://www.naver.com 처럼 사람이 읽을 수 있게 되어 있죠.
+
+하지만 컴퓨터는 영어나 기호를 읽을 수 없습니다.
+
+숫자만 인식할 수 있죠.
+
+컴퓨터는 영어로 된 주소를 **192.001.001.001** 처럼 숫자로 바꿔서 이해를 하죠. http://www.naver.com 은 알고보면 숫자나 마찬가지인거죠.
+
+인터넷에는 무수히 많은 컴퓨터가 있고 IP 주소를 통해서 각각의 컴퓨터를 구분합니다.
+
+그럼 브라우저는 영어로된 주소를 어떻게 IP 주소로 바꿀까요?
+
+### DNS 서버
+DNS 서버란 URL을 IP주소로 바꿀 수 있게 해주는 곳이에요.
+
+브라우저에 URL을 치면, 그 URL이 제대로 된 건지, 어떤 IP랑 연결되어 있는지 확인을 해줘야합니다.
+
+그 작업을 해주는 게 DNS서버에요.
+
+주소를 치는 짧은 사이에 확인을 하는 거죠. 놀랍지 않나요?
+
+이제 IP 주소를 확인했으면, IP 주소로 접속을 하면 되겠죠?
+
+아쉽지만 아직 해야할 일이 많이 남았습니다!
+
+![alt text](img/network/dns-and-how-it-works.png)
+
+
+
+
+
+
 ###### 레트로핏(Retrofit)이란?
 레트로핏은 HTTP를 다루기 위한 라이브러리에요.
 
@@ -113,7 +170,10 @@ Retrofit retrofit = new Retrofit.Builder()
 
 ###### 2. Retrofit - API Interface 만들기
 
-다음으로 REST API를 호출할 인터페이스를 만들어볼께요.
+밑에 주소를 URL에 넣어보면 JSON으로 된 데이터가 주르륵 나오죠?
+https://api.github.com/users/JakeWharton/repos
+
+이런 식으로 된 REST API를 호출할 인터페이스를 만들어볼께요.
 
 ```java
 public interface GithubService {
@@ -123,12 +183,14 @@ public interface GithubService {
 ```
 첫줄부터 보면 class 대신 interface로 선언되어 있죠. Retrofit내부에서 인터페이스를 알아서 구현해서 함수를 만들어요. 그래서 꼭 interface 로 적어줘야해요!
 
-두번째 줄을 보면 **@GET("/users/{user}/repos")** 라고 적혀있는데, HTTP METHOD를 특정 URL에 쓴다고 보면 되요. 아까 baseUrl을 **https://api.github.com/** 로 정했으니 **https://api.github.com/users/{user}/repos**
- 두번째 줄은  **/users/{user}/repos** 에서 GET METHOD를 호출해준다는 뜻이죠.
+두번째 줄을 보면 **@GET("/users/{user}/repos")** 라고 적혀있는데, HTTP METHOD를 특정 URL에 쓴다고 보면 되요.
+
+아까 baseUrl을 **https://api.github.com/** 로 정했으니 **https://api.github.com/users/{user}/repos** 두번째 줄은  **/users/{user}/repos** 에서 GET METHOD를 호출해준다는 뜻이죠.
 
 세번째 줄은 어떤 데이터 타입으로 HTTP 응답을 받아올지를 정하는 부분이에요. **Call** 은 retofit에서 데이터를 받을 때 쓰는 타입이구요, **```Call<List<Repo>>```** 은 **```List<Repo>```** 형태로 데이터를 받는다는 뜻이에요.
 
-마지막으로 **@Path("user")** 는 url에 들어갈 값을 정하는 기호에요.  
+마지막으로 **@Path("user")** 는 url에 들어갈 값을 정하는 기호에요.
+
 **@GET("/users/{user}/repos")** 을 보면 **{user}** 라고 적혀있었죠? **@Path** 에 있던 값이 입력됩니다.
 
 

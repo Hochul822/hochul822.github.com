@@ -26,7 +26,7 @@
 
 400kb 정도 밖에 안되는 가벼운 데이터베이스이다.
 
-간단한 데이터를 일고 쓸 때 쓰인다.
+간단한 데이터를 읽고 쓸 때 쓰인다.
 
 자원이 한정적인 모바일용으로 적합하다.
 
@@ -56,9 +56,9 @@ Name으로 된 열을 보면 모두 이름을 나타내는 것을 알 수 있다
 - BLOB(Binary Large Object)
   - 대형 이진 객체. 작은 텍스트나 이미지, 비디오 등 다양한 형태를 저장한다.
 
-##### SQLite 명령어들
+##### SQLite 기본 명령어들
 
-테이블 만들기
+###### 테이블 만들기
 ```sql
 create table employee(
 id integer primary key autoincrement,
@@ -68,48 +68,193 @@ age integer
 );
 ```
 
-테이블에 값 넣기 - 모든값
 ```sql
-insert into employee(id,name,wage) values(1,"영수",200);
-insert into employee(id,name,wage) values(2,"지선",250);
-insert into employee values(3,"철수", 400);    
+create table if not exists employee(
+id integer primary key autoincrement,
+name text not null,
+wage real not null,
+age integer
+);
 ```
 
-테이블에 값 넣기 - 일부만
+###### 테이블에 값 넣기 - 모든값
+```sql
+insert into employee values(1,"영선",200,35);
+insert into employee values(2,"지혁",300,30);
+insert into employee values(3,"선미",400,29);
+insert into employee values(4,"찬혁",250,28);
+insert into employee values(5,"정우",1250,21);  
+```
+
+###### 테이블에 값 넣기 - 일부만
 
 ```sql
 insert into employee(name,wage,age) values("미선", 230, 23)
 ```
 
-테이블에 있는 값 조회하기(query) - 전체
+###### 테이블에 있는 값 조회하기(query) - 전체
 ```sql
 select * from employee;
 ```
 
-테이블에 있는 값 조회하기 - 일부
+###### 테이블에 있는 값 조회하기 - 일부
 ```sql
 select * from employee where id = 1;
 select name from employee;
 ```
 
-테이블에 있는 값 변경
+###### 테이블에 있는 값 변경
 ```sql
 update employee set age = 33 where id = 1;
 ```
 
-테이블에 있는 값 지우기
+###### 테이블에 있는 값 지우기
 ```sql
 delete from employee where id = 1;
 ```
 
-테이블 삭제
+###### 테이블 삭제
 ```sql
 drop table employee;
 ```
+##### 각종 부가적인 조건문들
+where 문을 통해 조금 더 다양한 조건으로 데이터를 검색할 수 있다.
+
+or : 조건 중 하나라도 만족하는 경우
+```sql
+select * from employee where id = 1 or name = '선미' or age >= 30;
+```
+
+and : 모든 조건을 만족하는 경우
+
+```sql
+select * from employee where wage >= 500 and age > 20;
+```
+
+
+like : 일치하는 문자가 있는 경우
+
+like는 %로 일치하는지 여부를 확인한다.
+%를 어디에 붙이느냐에 따라 조회 결과가 달라진다.
+
+```sql
+select * from employee where wage like '20%'; // 20으로 시작하는 경우
+```
+
+```sql
+select * from employee where wage like '%0.0'; // 0으로 끝나는 경우
+```
+
+```sql
+select * from employee where wage like '%200.0%'; // 정확히 200.0이랑 일치하는 경우
+select * from employee where name like '정우'; // 정확히 이름이 '정우'인 경우
+```
+
+
+in : or 검색
+```sql
+select * from employee where age in (20, 28); // age가 20 이거나 28인 경우
+select * from employee where age not in (20, 28); // age가 20과 28이 아닌 경우
+```
+
+between : 범위 검색
+```sql
+select * from employee where age between 20 and 28; // age가 20~ 28인경우
+```
+
+limit : 조회 결과 숫자 제한
+```sql
+select * from employee limit 3; // 3개 까지만 나옴.
+```
+
+
+##### Join
+여태까지는 테이블을 하나만 사용했지만 실제로는 여러 테이블을 함께 사용하는 게 대부분이다.
+
+일단 테이블을 추가로 만들고 join을 한번 해보도록 하자.
+
+```sql
+create table department(
+   id integer primary key not null,
+   dept char(50) not null,
+   emp_id integer not null
+);
+```
+insert 하기
+
+```sql
+insert into department (id, dept, emp_id) values(1, 'IT Billing', 1);
+insert into department (id, dept, emp_id) values(2, 'Engineering', 2);
+insert into department (id, dept, emp_id) values(3, 'Finance', 6);
+```
+
+join 하기
+
+```sql
+select * from employee outer join department where employee.id = department.emp_id;
+select * from employee inner join department where employee.id = department.emp_id;
+select * from employee inner join department on employee.id = department.emp_id;
+```
+
+### Primary key, Foreign key
+
+테이블끼리 join할때 중요한 게 primary key랑 foreign key이다.
+
+primary key는 각각의 레코드(행)을 구분해 주는 역할을 하며, 무조건 각기 다른 값을 가져야한다.
+foreign key는 서로 다른 테이블을 연결할 때 사용한다.
+
+(추가설명할것)
+
+
 
 ### 안드로이드와의 연동
 
-### Query
+
+##### 데이터 베이스 열기
+
+sqlite3를 안드로이드에서 사용하려면 처음에 데이터 베이스를 생성해줘야한다.
+
+이는 **openOrCreateDatabase(데이터베이스 이름, 모드, 팩토리설정)** 란 함수를 통해서 한다.
+
+
+```java
+String dbName = "start.db";
+String tableName = "company";
+SQLiteDatabase db;
+
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    db = openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
+}
+```
+##### Select
+```java
+void createTable() {
+        String sql = "create table if not exists " + tableName + " (id integer primary key autoincrement not null," +
+                "name text not null," +
+                "address text not null," +
+                "age integer not null" +
+                ")";
+
+        db.execSQL(sql);
+    }
+
+    void insertData(int id, String name, String address, int age) {
+        String sql = "insert into " + tableName + " values('" + id +
+                "','" + name +
+                "','" + address +
+                "','" + age +
+                "')";
+        db.execSQL(sql);
+    }
+
+
+    
+
+##### Query
 INSERT, UPDATE, CREATE는 실행시 **execSQL()** 란 함수를 쓴다.
 
 ```java
