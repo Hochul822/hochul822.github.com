@@ -206,6 +206,14 @@ foreign key는 서로 다른 테이블을 연결할 때 사용한다.
 (추가설명할것)
 
 
+###### 미리 만들어놓은 SQL 파일 읽기
+
+SQL 파일을 따로 정의하고 읽어들이면 된다.
+
+```
+sqlite3 shopping.db < init.sql
+```
+
 
 ### 안드로이드와의 연동
 
@@ -252,7 +260,7 @@ void createTable() {
     }
 
 
-    
+
 
 ##### Query
 INSERT, UPDATE, CREATE는 실행시 **execSQL()** 란 함수를 쓴다.
