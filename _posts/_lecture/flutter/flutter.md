@@ -212,7 +212,6 @@ print(greetingMessage('James'));
 ```
 
 intl의 message에
-
 intl의 message들을 번역하려면 추출하는 작업을 해야된다.
 
 ```
@@ -220,6 +219,61 @@ intl의 message들을 번역하려면 추출하는 작업을 해야된다.
 flutter pub pub run intl_translation:extract_to_arb --output-dir=lib/l10n lib/demo_localization.dart
 ```
 
+intl_messages.arb 파일이 만들어 졌는지 확인해보자.
+
+
+- intl_messages.arb
+```json
+{
+  "@@last_modified": "2018-10-02T13:15:36.083574",
+  "title": "Hello world app",
+  "@title": {
+    "description": "The application title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hello": "Hello",
+  "@hello": {
+    "type": "text",
+    "placeholders": {}
+  }
+}
+```
+
+intl_messages.arb를 복사해서
+언어에 맞게 파일을 만들어주자. 언어에 맞게 번역하는 건 필수다!
+
+- intl_en.arb
+- intl_es.arb
+- intl_ko.arb
+
+이제 arb 파일을 바탕으로 다트 파일을 만들어보자.
+
+```
+flutter pub pub run intl_translation:generate_from_arb --output-dir=lib/l10n --no-use-deferred-loading lib/my_app_localization.dart lib/l10n/intl_*.arb
+```
+
+** messages_en.dart, messages_ko.dart, messages_es.dart ** 같이 언어에 맞게 파일이 만들어진다.
+
+
+
+결론 : 플러터에서 여러 언어를 지원하려면 Intl.message 작성 -> arb로 추출 -> arb를 언어별로 생성 -> arb를 번역 -> arb를 플러터에서 쓰이게 변환해야한다.
+
+간단하진 않다.
+
+기타 - intl로 번역하는 게 계속 안되길래
+
+pubspec.yaml에서 아래 부분을 지워봄.
+
+```yaml
+transformers:
+- intl_translation:
+$include: main.dart,demo_localization.dart
+```
+
+이 부분을 지우니 잘 된다~!
+
+참고 - https://proandroiddev.com/flutter-localization-step-by-step-30f95d06018d
 
 
 #### 플러터 UI 참고 사이트

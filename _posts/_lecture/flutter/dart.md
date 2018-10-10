@@ -1,3 +1,71 @@
+### Isolate -  Concurrency : Isolate와 Message 통신
+
+Isolate는 메시지를 통해 서로 다른 Isolate끼리 통신을 한다.
+
+원래의 Isolate와 새로 만들어진(스폰된) Isolate와 메시지를 주고 받으려면 ReceivePort와 SendPort가 필요하다.
+
+각각의 역할을 알아보자.
+
+- ReceivePort
+  - 메시지를 받는 역할
+  - SendPort를 갖고 있음.
+  - ReceivePort 하나에 여러 SendPort가 있을 수 있다.
+  - Isolate 하나당 하나씩은 있어야 된다.
+
+- SendPort
+  - 메시지를 보내는 역할
+  - ReceivePort랑 항상 연결되어 있다.
+  - SendPort를 쓰려면 ReceivePort를 먼저 만들어야한다.
+  - 다른 Isolate에 넣을 수 있다.
+
+DART - Isolate에서 메시지 주고 받기
+
+```java
+// Isolate가 생성된다.
+echo(SendPort sendPort) async {
+  var port = ReceivePort(); // 다른 Isolate와 통신하기 위해 ReceivePort를 만든다.
+  sendPort.send(port.sendPort); // 어떤 포트에 연결되어 있는지 알려준다.
+
+  await for (var msg in port) { // 이 Isolate에 메시지가 들어오면 처리를 한다.
+    var data = msg[0];
+    SendPort replyTo = msg[1];
+    replyTo.send(data);
+    if (data == "exit") {
+      port.close();
+    }
+  }
+}
+
+// 메시지를 Isolate에 전달한다.
+Future sendReceive(SendPort port, msg) {
+  ReceivePort response = ReceivePort(); // SendPort를 쓰기 위해 ReceivePort를 만든다.
+  port.send([msg, response.sendPort]);
+  return response.first;
+}
+```
+
+실행해보자.
+
+```javascript
+main() async {
+  var receivePort = ReceivePort();
+  await Isolate.spawn(echo, receivePort.sendPort); // Isolate 생성
+
+  var sendPort = await receivePort.first; // 메시지를 보낼 포트를 정함
+  var msg = await sendReceive(sendPort, "hello"); // 메시지 전달
+
+  print(msg); // 메시지 출력
+  msg = await sendReceive(sendPort, "morning");
+  print(msg);
+
+  msg = await sendReceive(sendPort, "exit");
+  print(msg);
+}
+```
+
+Isolate 내에 메시지를 보내고, 그 안에서 메시지 처리를 한 다음에 돌려주는 작업을 반복하고 있다.
+
+
 ### Stream, Future
 
 Stream은 연속된 비동기적 이벤트를 말한다. 사용자가 언제 데이터를 줄지 정하는 게 아니라, Stream이 준비가 되면 데이터를 건내준다.
