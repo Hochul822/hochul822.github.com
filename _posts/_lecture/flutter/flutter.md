@@ -172,6 +172,8 @@ Widget build(BuildContext context) {
 - Fluuter가 클라이언트가 되고, 안드로이드와 IOS가 서버가 되는 구조
 
 
+- 에셋 안드로이드, ios에서 접근하기 ( https://flutter.io/assets-and-images/)
+
 
 ### Internalization - 여러 언어 지원
 꽤나 복잡하다.
@@ -275,6 +277,10 @@ $include: main.dart,demo_localization.dart
 
 참고 - https://proandroiddev.com/flutter-localization-step-by-step-30f95d06018d
 
+#### 플러터 출시하기
+안드로이드
+flutter build apk --release
+
 
 #### 플러터 UI 참고 사이트
 
@@ -283,6 +289,18 @@ https://github.com/Norbert515/BookSearch/tree/master/lib
 
 다른 사람들이 만든 플러터 UI를 gif로 볼 수 있는 곳
 https://startflutter.com/
+
+
+---
+플러터 엔진에서 스레딩
+https://github.com/flutter/engine/wiki/Threading-in-the-Flutter-Engine
+
+플러터는 기본적으로 4개의 Task Runner로 나눠져 있는데 스레드와 비슷한 역할을 한다.
+
+- Platform Task Runner
+- UI
+- GPU
+- IO
 
 
 ---
