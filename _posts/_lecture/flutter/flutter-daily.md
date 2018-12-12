@@ -23,3 +23,8 @@ pre_install do |installer|
         Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_f    ramework_transitive_dependencies) {}
 end
 ```
+
+----
+
+2018.11.12
+위젯의 width나 height를 infinity로 하려면 Expanded안에 넣어야한다.
